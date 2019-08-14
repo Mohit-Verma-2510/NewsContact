@@ -8,7 +8,7 @@
 
 import Foundation
 
-
+/// This is for checking weather some action is successfull or not
 protocol StatusProtocol {
     func success (msg:String)
 }

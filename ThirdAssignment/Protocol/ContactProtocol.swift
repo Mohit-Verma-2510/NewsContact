@@ -1,3 +1,4 @@
+
 //
 //  ContactProtocol.swift
 //  ContactCRUD
@@ -9,35 +10,31 @@
 import UIKit
 
 
-protocol ContactProtocol {
+/// This protocol is for checking all contact operation is done or not.
+protocol ContactProtocol: AnyObject {
     
+    /// for sending error
     func contactError (errMsg: String)
     
+    /// for sending all data
     func contactData (data:[ContactModel])
     
+    /// saving contact status
     func contactSaved (msg:String)
     
+    /// delete contact status
     func contactDeleted (msg:String)
-    
 }
-
+/// Setting default 
 extension ContactProtocol {
     
+    /// Alert will if any error in core data
     func contactError (errMsg: String) {
-        
-        let window = UIApplication.shared.keyWindow
-        
-        let alert = UIAlertController(title: "Error", message: errMsg, preferredStyle: UIAlertController.Style.alert)
-        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
-        
-        window?.rootViewController?.present(alert, animated: true, completion: nil)
-        
+        BaseAlert.showError(message: errMsg)
     }
     
+    /// Setting optional functions
     func contactData (data:[ContactModel]) {}
-    
     func contactSaved (msg:String) {}
-    
     func contactDeleted (msg:String) {}
-    
 }

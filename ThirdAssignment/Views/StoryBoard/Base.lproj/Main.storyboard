@@ -10,6 +10,21 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Realm Test View Controller-->
+        <scene sceneID="TMV-Sg-9dA">
+            <objects>
+                <viewController id="kik-79-VDJ" customClass="RealmTestViewController" customModule="ThirdAssignment" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FDx-bu-EAz">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="Ota-6P-UaW"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="R3i-fK-dA2" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4806" y="472"/>
+        </scene>
         <!--Notification View Controller-->
         <scene sceneID="Li1-IH-fpa">
             <objects>
@@ -44,7 +59,58 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="noY-oV-uYv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6774" y="630"/>
+            <point key="canvasLocation" x="5452" y="472"/>
+        </scene>
+        <!--Container View View Controller-->
+        <scene sceneID="och-7J-teD">
+            <objects>
+                <viewController id="dy6-TB-FdG" customClass="ContainerViewViewController" customModule="ThirdAssignment" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="hQP-Zx-Vxe">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9JJ-hS-fHd">
+                                <rect key="frame" x="0.0" y="20" width="375" height="313"/>
+                                <connections>
+                                    <segue destination="4ym-ry-nxr" kind="embed" id="3gu-ac-pNy"/>
+                                </connections>
+                            </containerView>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Igu-He-AM7">
+                                <rect key="frame" x="0.0" y="334" width="375" height="333"/>
+                                <connections>
+                                    <segue destination="ZQG-rV-hPM" kind="embed" id="00b-ZX-Atj"/>
+                                </connections>
+                            </containerView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="L05-c6-eDd">
+                                <rect key="frame" x="0.0" y="333" width="375" height="1"/>
+                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.84705882349999995" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="Wxf-03-k4V"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="9JJ-hS-fHd" firstAttribute="top" secondItem="uGD-Jo-Pwg" secondAttribute="top" id="1qG-zn-XFi"/>
+                            <constraint firstItem="uGD-Jo-Pwg" firstAttribute="trailing" secondItem="L05-c6-eDd" secondAttribute="trailing" id="39t-8i-otn"/>
+                            <constraint firstItem="Igu-He-AM7" firstAttribute="centerX" secondItem="hQP-Zx-Vxe" secondAttribute="centerX" id="6yz-7p-U0z"/>
+                            <constraint firstItem="Igu-He-AM7" firstAttribute="top" secondItem="L05-c6-eDd" secondAttribute="bottom" id="Dtw-lV-Bci"/>
+                            <constraint firstItem="Igu-He-AM7" firstAttribute="leading" secondItem="uGD-Jo-Pwg" secondAttribute="leading" id="EnJ-rO-P0D"/>
+                            <constraint firstItem="L05-c6-eDd" firstAttribute="leading" secondItem="uGD-Jo-Pwg" secondAttribute="leading" id="NMh-Q0-bkg"/>
+                            <constraint firstItem="9JJ-hS-fHd" firstAttribute="trailing" secondItem="uGD-Jo-Pwg" secondAttribute="trailing" id="QM7-IT-KCx"/>
+                            <constraint firstItem="uGD-Jo-Pwg" firstAttribute="bottom" secondItem="Igu-He-AM7" secondAttribute="bottom" id="SZx-cN-E02"/>
+                            <constraint firstItem="Igu-He-AM7" firstAttribute="trailing" secondItem="uGD-Jo-Pwg" secondAttribute="trailing" id="YnC-od-XCG"/>
+                            <constraint firstItem="9JJ-hS-fHd" firstAttribute="leading" secondItem="uGD-Jo-Pwg" secondAttribute="leading" id="lNh-d6-vII"/>
+                            <constraint firstItem="L05-c6-eDd" firstAttribute="centerY" secondItem="hQP-Zx-Vxe" secondAttribute="centerY" id="mKR-cX-BZ5"/>
+                            <constraint firstItem="L05-c6-eDd" firstAttribute="centerX" secondItem="hQP-Zx-Vxe" secondAttribute="centerX" id="o0e-q3-fvL"/>
+                            <constraint firstItem="L05-c6-eDd" firstAttribute="top" secondItem="9JJ-hS-fHd" secondAttribute="bottom" id="xeq-aT-fCb"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="uGD-Jo-Pwg"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pzm-8O-XGH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="6301.6000000000004" y="471.8140929535233"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -105,6 +171,7 @@
                     <connections>
                         <segue destination="jfL-bc-QfG" kind="relationship" relationship="viewControllers" id="Y8f-mC-fVu"/>
                         <segue destination="hwB-Ec-awC" kind="relationship" relationship="viewControllers" id="oir-w2-68i"/>
+                        <segue destination="zz3-U2-Z0m" kind="relationship" relationship="viewControllers" id="YmG-ke-hlD"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PGZ-8j-jqz" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -119,7 +186,17 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="z4A-t9-gfx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3402" y="472"/>
+            <point key="canvasLocation" x="3216" y="470"/>
+        </scene>
+        <!--NewsFavourite-->
+        <scene sceneID="Ejg-FG-Hqj">
+            <objects>
+                <viewControllerPlaceholder storyboardName="NewsFavourite" id="zz3-U2-Z0m" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="V3r-7w-Gig"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dVM-kt-NEF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3432" y="470"/>
         </scene>
         <!--News-->
         <scene sceneID="2AC-7e-ins">
@@ -129,7 +206,35 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9JW-7v-omN" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3056" y="472"/>
+            <point key="canvasLocation" x="3021" y="470"/>
+        </scene>
+        <!--Second View Controller-->
+        <scene sceneID="wIV-LW-gqN">
+            <objects>
+                <viewController id="4ym-ry-nxr" customClass="SecondViewController" customModule="ThirdAssignment" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="eJK-8w-6yW">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="313"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="0.96212023499999999" green="0.82553845640000001" blue="0.27804568410000002" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="chB-xn-GUV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7049" y="646"/>
+        </scene>
+        <!--First View Controller-->
+        <scene sceneID="RMN-dU-3rP">
+            <objects>
+                <viewController id="ZQG-rV-hPM" customClass="FirstViewController" customModule="ThirdAssignment" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="9h8-bA-LOk">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="333"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="0.84705882349999995" colorSpace="calibratedRGB"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="eUq-H6-eF0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7049" y="251"/>
         </scene>
     </scenes>
 </document>

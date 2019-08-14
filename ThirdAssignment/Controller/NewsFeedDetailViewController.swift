@@ -7,73 +7,31 @@
 //
 
 import UIKit
-import WebKit
 
+/// This is web view class for news details
 class NewsFeedDetailViewController: BaseViewController {
     
-    let cellID = "NewsDetailCell"
+    /// Contains all data
+    var data: NewsViewModal?
     
-    @IBOutlet weak var tableView: UITableView!
-    
-    var data = NewsDataModal(data: [:])
-    
-    var webView: WKWebView!
-    
-    override func loadView() {
-        let webConfiguration = WKWebViewConfiguration()
-        webView = WKWebView(frame: .zero, configuration: webConfiguration)
-        webView.uiDelegate = self
-        view = webView
-    }
+    /// Custom view refernce for this view controller
+    var custViewDetail: NewsFeedDetailViewControllerView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let myURL = URL(string:data.url)
-        let myRequest = URLRequest(url: myURL!)
-        webView.load(myRequest)
-    }
-    
-    func tableViewSetting(){
-        let nib = UINib(nibName: "NewsFeedDetailTableViewCell", bundle: nil)
-        tableView.register(nib, forCellReuseIdentifier: cellID)
+        /// initial set up for webview
+        custViewDetail = self.view as? NewsFeedDetailViewControllerView
+        custViewDetail?.createWebView()
         
-        tableView.separatorStyle = .none
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-    }
-    
-}
-
-extension NewsFeedDetailViewController: WKUIDelegate {
-    
-}
-
-// MARK: - UITableViewDelegate , UITableViewDataSource
-extension NewsFeedDetailViewController: UITableViewDelegate , UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? NewsFeedDetailTableViewCell else {
-            return UITableViewCell()
+        /// Setting URL to web view
+        guard let tempURL = data?.newsURL, let myURL = URL(string:tempURL) else {
+            print("Error with URL.")
+            return
         }
         
-        cell.selectionStyle = .none
-        
-        if indexPath.row == 0 {
-            cell.newsLbl.text = data.title
-        }
-        else if indexPath.row == 1{
-            cell.newsLbl.text = data.description
-        }
-        
-        return cell
+        /// loading web view with url
+        custViewDetail?.loadWebView(with: myURL)
     }
-    
     
 }

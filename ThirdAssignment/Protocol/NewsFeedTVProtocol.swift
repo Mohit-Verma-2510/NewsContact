@@ -8,6 +8,9 @@
 
 import Foundation
 
+/// This is for favouite action
 protocol NewsFeedTVProtocol {
+    /// when favourite button is clicked
+    /// getting action from table view cell to controllers view
     func favButtonAction(_ senderIndex: Int)
 }

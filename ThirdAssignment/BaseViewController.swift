@@ -8,13 +8,16 @@
 
 import UIKit
 
+/**
+ - About :
+    -  This Class is for Animation.
+    - To Apply : Inherit BaseViewController instead of UIViewController in controller.
+ */
 class BaseViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
         transitioningDelegate = self
     }
-    
 }
 
 //MARK:- Transition Delegate For View Controller
@@ -22,14 +25,13 @@ extension BaseViewController : UIViewControllerTransitioningDelegate {
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
-        return AnimationController(animationDuration: 0.6, animationType: .present, startingPoint: self.view.center)
+        return CircularAnimationController(animationDuration: 0.6, animationType: .present, startingPoint: self.view.center)
     }
     
     func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         
-        return AnimationController(animationDuration: 0.6, animationType: .dismiss, startingPoint: self.view.center)
+        return CircularAnimationController(animationDuration: 0.6, animationType: .dismiss, startingPoint: self.view.center)
     }
-    
     
 }
 

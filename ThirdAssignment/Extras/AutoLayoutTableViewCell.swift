@@ -20,7 +20,6 @@ class AutoLayoutTableViewCell: UITableViewCell {
         messageLbl.translatesAutoresizingMaskIntoConstraints = false
         messageLbl.numberOfLines = 0
         
-        
         let constraints = [messageLbl.topAnchor.constraint(equalTo: topAnchor),
                            messageLbl.leadingAnchor.constraint(equalTo: leadingAnchor),
                            messageLbl.bottomAnchor.constraint(equalTo: bottomAnchor),
@@ -33,5 +32,7 @@ class AutoLayoutTableViewCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    
 
 }

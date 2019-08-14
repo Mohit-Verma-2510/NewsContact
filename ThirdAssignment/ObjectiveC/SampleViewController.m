@@ -7,6 +7,7 @@
 //
 
 #import "SampleViewController.h"
+#import "ThirdAssignment-Swift.h"
 
 @interface SampleViewController ()
 
@@ -17,16 +18,16 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)printSomeData {
+    NSLog(@"This is called from SWIFT...");
+    
+    ///Calling swift function from objective c
+    NewsFeedViewController *obj = [[NewsFeedViewController alloc]init];
+    [obj sampleFuncForObjc];
 }
-*/
 
 @end

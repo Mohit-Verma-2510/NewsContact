@@ -12,18 +12,27 @@ import UIKit
 @IBDesignable
 class BaseView: UIView {
     
+    /// To enable Custom properties
+    var isViewConfigurable = false
+    
+    /// Activity Indicator
+    var activityIndicator = UIActivityIndicatorView()
+    
+    /// Setting corner radius from storyboard
     @IBInspectable
     var cornerRadius:CGFloat = 0.0 {
         didSet {
-            layer.cornerRadius = cornerRadius
+            if isViewConfigurable{
+                layer.cornerRadius = cornerRadius
+            }
         }
     }
     
-    ///Setting bottom border of size 0.5
+    ///Setting bottom border from storyboard
     @IBInspectable
     var bottomBorder:Bool = false {
         didSet{
-            if bottomBorder {
+            if bottomBorder , isViewConfigurable{
                 addBottomBorderWithColor()
             }
         }
@@ -32,8 +41,13 @@ class BaseView: UIView {
 }
 
 // MARK: - Constant function for UIView
+extension BaseView {
+    ///REMOVED
+}
+
+//MARK:- Common for all Views
 extension UIView {
-    
+    /// Adding Shadow all sides
     func boxShadow(){
         layer.shadowOffset = CGSize(width: -1, height: 1)
         layer.shadowRadius = 1
@@ -42,12 +56,30 @@ extension UIView {
         layer.shadowOpacity = 0.5
     }
     
+    /// Adding border at bottom
     func addBottomBorderWithColor() {
         let border = CALayer()
         border.backgroundColor = UIColor.gray.cgColor
         border.frame = CGRect(x: 0, y: self.frame.size.height - 0.5, width: self.frame.size.width, height: 0.5)
         self.layer.addSublayer(border)
     }
+}
+
+//MARK:- Activity Indicator
+extension BaseView {
+    /// Activity Indicator Start Animation
+    public func startActivityIndicator(){
+        activityIndicator.frame = CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0);
+        activityIndicator.center = self.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.style = .gray
+        self.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+    }
     
+    /// Activity Indicator Stop Animation
+    public func stopActivityIndicator(){
+        activityIndicator.stopAnimating()
+    }
 }
 

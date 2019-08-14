@@ -7,3 +7,14 @@
 //
 
 import Foundation
+
+/// This is for network calls
+protocol NetworkProtocol {
+    
+    /// Delegate
+    var delegate:NewsDataProtocol? { get set }
+    
+    /// Common function to get all data
+    func getAllData(with urlString: String)
+    
+}

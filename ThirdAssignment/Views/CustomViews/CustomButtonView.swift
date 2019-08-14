@@ -12,11 +12,11 @@ import UIKit
 @IBDesignable
 class CustomButtonView: UIButton {
     
+    /// For corner radius
     @IBInspectable
     var cornerRadius:CGFloat = 0.0 {
         didSet{
             layer.cornerRadius = cornerRadius
         }
     }
-    
 }

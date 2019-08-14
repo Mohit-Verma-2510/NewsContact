@@ -8,7 +8,12 @@
 
 import Foundation
 
-protocol DetailContactAction {
+/// Detail view controller action
+protocol DetailContactAction: AnyObject {
+    
+    /// for dismissing view controller
     func didDismissViewController()
+    
+    /// when edit button is clicked
     func didEditButtonClicked()
 }

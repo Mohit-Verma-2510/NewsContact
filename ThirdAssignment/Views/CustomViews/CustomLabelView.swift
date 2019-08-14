@@ -12,22 +12,16 @@ import UIKit
 @IBDesignable
 class CustomLabelView: UILabel {
     
+    /// for corner radius
     @IBInspectable
     var cornerRadius: CGFloat = 0.0 {
         didSet {
             layer.cornerRadius = cornerRadius
         }
     }
-    
 }
 
 // MARK: - Constant function
 extension CustomLabelView{
-    func addShadow(){
-        layer.shadowOffset = CGSize(width: -1, height: 1)
-        layer.shadowRadius = 1
-        layer.masksToBounds = false
-        layer.shadowColor = UIColor.black.cgColor
-        layer.shadowOpacity = 0.5
-    }
+    //Removed
 }

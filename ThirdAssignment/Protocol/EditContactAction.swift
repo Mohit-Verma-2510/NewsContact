@@ -8,7 +8,12 @@
 
 import Foundation
 
-protocol EditContactAction {
-    func didDismissViewController()
+/// Edit Vview controller Action
+protocol EditContactAction: AnyObject {
+    
+    /// for saving data in core data
     func didSaveData(data:ContactModel)
+    
+    /// for dismissing view controller
+    func didDismissViewController()
 }

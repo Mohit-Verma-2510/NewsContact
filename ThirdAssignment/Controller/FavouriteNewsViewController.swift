@@ -7,24 +7,40 @@
 //
 
 import UIKit
+import RealmSwift
 
+/// This is for diplaying favourite news marked by user
 class FavouriteNewsViewController: UIViewController {
-
+    
+    /// Custom view for this view controller
+    var custView: FavouriteNewsView?
+    
+    /// Realm instance
+    let realmInstance = RealmNews.shared
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        /// Initial setup
+        custView = self.view as? FavouriteNewsView
+        realmInstance.realmDelegate = self
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    /// Reloading data
+    override func viewWillAppear(_ animated: Bool) {
+        realmInstance.getAllData()
     }
-    */
+}
 
+// MARK: - RealmProtocol
+extension FavouriteNewsViewController: RealmProtocol {
+    /// Getting all data from realm
+    func allData(data:Results<NewsObject>){
+        var favouriteNewsData = [NewsObject]()
+        favouriteNewsData.removeAll()
+        favouriteNewsData = data.filter{ $0.isFav }
+        if favouriteNewsData.count == 0 {
+            BaseAlert.showMessage(AlertMessage.noDataFound)
+        }
+        custView?.setTableData(data: favouriteNewsData)
+    }
 }

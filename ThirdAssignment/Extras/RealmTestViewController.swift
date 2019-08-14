@@ -7,24 +7,26 @@
 //
 
 import UIKit
+import RealmSwift
 
+//MARK: - Modal Class For REALM
+class Dog: Object {
+    @objc dynamic var name = ""
+    @objc dynamic var age = 0
+}
+class Person: Object {
+    @objc dynamic var name = ""
+    @objc dynamic var picture: Data? = nil
+    let dogs = List<Dog>()
+}
+
+/// View Controller for testing REALM
 class RealmTestViewController: UIViewController {
-
+    
+    let realmInstance = try! Realm()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

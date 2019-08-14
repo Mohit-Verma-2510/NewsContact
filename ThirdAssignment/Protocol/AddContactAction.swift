@@ -8,7 +8,12 @@
 
 import Foundation
 
-protocol AddContactAction {
+/// Add view controller Action
+protocol AddContactAction: AnyObject{
+    
+    /// for sdaving data in core data
     func didSaveData(data: NSDictionary)
+    
+    /// for dismissing view controller after saving
     func didDismissViewController()
 }

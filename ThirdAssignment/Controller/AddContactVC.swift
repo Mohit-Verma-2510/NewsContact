@@ -8,44 +8,45 @@
 
 import UIKit
 
+/// This class is for Adding contact
 class AddContactVC: BaseViewController {
     
-    @IBOutlet weak var nameTF: UITextField!
-    @IBOutlet weak var phoneTF: UITextField!
-    
+    /// Delegate to check contyact is added or not
     var delegate : StatusProtocol?
+    
+    /// Custom view for this view controller
+    var customAddView: AddContactVCView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        /// initial setup
+        customAddView = self.view as? AddContactVCView
+        customAddView?.addDelegate = self
     }
-    
-    @IBAction func saveBtn(_ sender: Any) {
-        
-        let name  = nameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let phone = phoneTF.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if name!.isEmpty || phone!.isEmpty {
-            print("empty")
-        }
-        else {
-            let coreD = CoreDataOperation.shared
-            coreD.delegate = self
-            coreD.saveContact(ename: CoreDataEntity.contactList, data: [ "name" : name! , "phone" : phone! ] )
-        }
-        
-    }
-    
-    @IBAction func backBtn(_ sender: Any) {
-        dismiss(animated: true, completion: nil)
-    }
-    
 }
 
 //MARK:- Extension for Contact
-extension AddContactVC : ContactProtocol {
-    
+extension AddContactVC: ContactProtocol {
     func contactSaved(msg: String) {
         delegate?.success(msg: "success")
+        dismiss(animated: true, completion: nil)
+    }
+}
+
+// MARK: - AddContactAction
+extension AddContactVC: AddContactAction {
+    /// Saving data in coore data
+    ///
+    /// - Parameter data: data to save in core data
+    func didSaveData(data: NSDictionary){
+        let coreD = CoreDataOperationForContact.shared
+        coreD.delegate = self
+        coreD.saveContact(ename: CoreDataEntity.contactList, data:  data)
+    }
+    
+    
+    /// Dismissing view controller
+    func didDismissViewController(){
         dismiss(animated: true, completion: nil)
     }
     

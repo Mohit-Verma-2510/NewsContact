@@ -7,3 +7,23 @@
 //
 
 import Foundation
+
+protocol ContactViewModel {
+    /// Name
+    var fullName: String { get }
+    
+    /// Phone
+    var mobile: String { get }
+}
+
+extension ContactModel: ContactViewModel {
+    /// Setting value for full name
+    var fullName: String {
+       return name
+    }
+    
+    /// Setting value for mobile
+    var mobile: String {
+        return phone
+    }
+}

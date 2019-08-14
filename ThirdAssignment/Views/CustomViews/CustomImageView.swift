@@ -12,6 +12,7 @@ import UIKit
 @IBDesignable
 class CustomImageView: UIImageView {
     
+    /// For corner radius
     @IBInspectable
     var cornerRadius: CGFloat = 0.0 {
         didSet {

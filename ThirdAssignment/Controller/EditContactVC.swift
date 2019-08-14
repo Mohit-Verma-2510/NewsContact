@@ -8,56 +8,66 @@
 
 import UIKit
 
+/// Thsi class is for editing contact
 class EditContactVC: BaseViewController {
     
-    @IBOutlet weak var nameTF: UITextField!
-    @IBOutlet weak var phoneTF: UITextField!
-    
+    /// data before editing
     var oldData = ContactModel(data: [:])
     
-    var delegate : StatusProtocol?
+    /// Delegate
+    var delegate: StatusProtocol?
+    
+    /// Custom view for this view controller
+    var customEditView: EditContactVCView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameTF.text = oldData.name
-        phoneTF.text = oldData.phone
+        customEditView = self.view as? EditContactVCView
+        customEditView?.setValues(oldData: oldData)
+        customEditView?.editDelegate = self
     }
     
-    @IBAction func updateBtn(_ sender: Any) {
-        
-        let name  = nameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let phone = phoneTF.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        if name!.isEmpty || phone!.isEmpty {
-            print("empty")
-        }
-        else {
-            let coreD = CoreDataOperation.shared
-            coreD.delegate = self
-            coreD.editContact(ename: CoreDataEntity.contactList, oldData: oldData, newData: ContactModel(data: ["name":name!,"phone":phone!]))
-        }
-        
-    }
-    
-    @IBAction func backBtn(_ sender: Any) {
-        dismissViewController()
-    }
-    
+    ///Common func to dismiss
     func dismissViewController(){
         dismiss(animated: true, completion: nil)
     }
     
 }
 
-//MARK:-
+//MARK:- ContactProtocol for checking status of code data
 extension EditContactVC : ContactProtocol {
-    
     func contactSaved(msg: String) {
-        oldData.name = (nameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines))!
-        oldData.phone = (phoneTF.text?.trimmingCharacters(in: .whitespacesAndNewlines))!
+        //Using reference sending value to before VC
+        guard let updatedName = customEditView?.nameTF.text?.trimmingCharacters(in: .whitespacesAndNewlines),
+            let updatedPhone = customEditView?.phoneTF.text?.trimmingCharacters(in: .whitespacesAndNewlines) else {
+                return
+        }
+        oldData.name = updatedName
+        oldData.phone = updatedPhone
         
-        delegate?.success(msg: "")
+        delegate?.success(msg: "success.")
         dismissViewController()
     }
     
 }
+
+// MARK: - EditContactViewToViewController
+extension EditContactVC: EditContactAction{
+    
+    /// Dismiss action
+    func didDismissViewController() {
+        dismissViewController()
+    }
+    
+    /// Saving data action
+    func didSaveData(data: ContactModel) {
+        /// setting data
+        let coreData = CoreDataOperationForContact.shared
+        coreData.delegate = self
+        coreData.editContact(ename: CoreDataEntity.contactList,
+                          oldData: oldData,
+                          newData: data)
+    }
+    
+}
+

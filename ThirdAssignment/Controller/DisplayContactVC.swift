@@ -8,30 +8,85 @@
 
 import UIKit
 
+/// This is for displaying ccontact
 class DisplayContactVC: UIViewController {
     
-    @IBOutlet weak var contactTableView: UITableView!
+    /// Core data reference
+    let coreDataRef = CoreDataOperationForContact.shared
     
-    var contactData = [ContactModel]()
-    
-    let cellID = "ContactCell"
-    
-    let coreD = CoreDataOperation.shared
+    /// Custom view for this view contoller
+    var customControllerView: DisplayContactVCView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        /// intial setup
+        customControllerView = self.view as? DisplayContactVCView
+        customControllerView?.displayDelegate = self
+        customControllerView?.viewInit()
+        
+        /// Getting data from core data
         getAllData()
-        contactTableView.tableFooterView = UIView()
     }
     
-    ///Getting all data
+    /// Getting all data response will come in ContactData Func
     func getAllData() {
-        coreD.delegate = self
-        coreD.getContact(ename: CoreDataEntity.contactList, data: [])
+        coreDataRef.delegate = self
+        coreDataRef.getContact(ename: CoreDataEntity.contactList, data: [])
     }
     
-    ///Action for add button
-    @IBAction func addBtnAction(_ sender: Any) {
+}
+
+//MARK:- Contact Protocol
+extension DisplayContactVC: ContactProtocol{
+    
+    /// Sending data to View.
+    ///
+    /// - Parameter data: Data coming from Core Data
+    func contactData (data:[ContactModel]) {
+        if data.count == 0 {
+            BaseAlert.showMessage(AlertMessage.noDataFound)
+        }
+        customControllerView?.setData(data: data)
+    }
+    
+    /// If contact is deleted then update data for UI
+    ///
+    /// - Parameter msg: message for user
+    func contactDeleted (msg:String){
+        print("deleted and protocvolis called")
+        getAllData()
+    }
+    
+}
+
+//MARK:- Status Protocol From Add View Controller
+extension DisplayContactVC: StatusProtocol {
+    func success(msg: String) {
+        getAllData()
+    }
+}
+
+// MARK: - Getting data from DisplayContactVCView.
+extension DisplayContactVC: DisplayContactAction {
+    
+    /// Action for table view cell
+    ///
+    /// - Parameter cellData: Data for selected cell
+    func didselectTableCellAction(cellData: ContactModel) {
+        guard let destVC = storyboard?.instantiateViewController(withIdentifier: "DetailVC") as? DetailContactVC else {
+            print("Error with DetailVC.")
+            return
+        }
+        destVC.delegate = self
+        let name = cellData.name
+        let phone = cellData.phone
+        destVC.data = ContactModel(data: ["name":name,"phone":phone])
+        present(destVC, animated: true, completion: nil)
+    }
+    
+    /// Action for add button
+    func didAddButtonClicked() {
         guard let destVC = storyboard?.instantiateViewController(withIdentifier: "AddContactVC") as? AddContactVC else {
             print("error with AddContactVC ")
             return
@@ -40,66 +95,12 @@ class DisplayContactVC: UIViewController {
         present(destVC, animated: true, completion: nil)
     }
     
-    
-}
-
-//MARK:- Table view delegate and dat source
-extension DisplayContactVC : UITableViewDelegate , UITableViewDataSource {
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return contactData.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let contactCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath)
-        contactCell.selectionStyle = .none
-        let temp = contactData[indexPath.row]
-        contactCell.textLabel?.text = temp.name + " - " + temp.phone
-        return contactCell
-    }
-    
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            coreD.delegate = self
-            coreD.deleteContact(ename: CoreDataEntity.contactList, data: contactData[indexPath.row])
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let destVC = storyboard?.instantiateViewController(withIdentifier: "DetailVC") as? DetailContactVC else {
-            print("Error with DetailVC.")
-            return
-        }
-        destVC.delegate = self
-        let name = contactData[indexPath.row].name
-        let phone = contactData[indexPath.row].phone
-        destVC.data = ContactModel(data: ["name":name,"phone":phone])
-        present(destVC, animated: true, completion: nil)
-    }
-    
-}
-
-//MARK:- Contact Protocol
-extension DisplayContactVC : ContactProtocol{
-    
-    func contactDeleted (msg:String){
-        getAllData()
-    }
-    
-    func contactData (data:[ContactModel]) {
-        self.contactData = data
-        contactTableView.delegate = self
-        contactTableView.dataSource = self
-        contactTableView.reloadData()
-    }
-    
-}
-
-//MARK:- Status Protocol
-extension DisplayContactVC : StatusProtocol {
-    
-    func success(msg: String) {
-        getAllData()
+    /// Delete Cell Action
+    ///
+    /// - Parameter deleteCell: data for particular cell
+    func didDeleteTableRow(deleteCell:ContactModel){
+        print("Delete is called")
+        coreDataRef.deleteContact(ename: CoreDataEntity.contactList, data: deleteCell)
     }
     
 }

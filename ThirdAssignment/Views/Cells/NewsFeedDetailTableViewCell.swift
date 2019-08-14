@@ -9,12 +9,12 @@
 import UIKit
 
 class NewsFeedDetailTableViewCell: UITableViewCell {
-
+    
     @IBOutlet weak var newsLbl: CustomLabelView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        newsLbl.addShadow()
+        newsLbl.boxShadow()
     }
     
 }

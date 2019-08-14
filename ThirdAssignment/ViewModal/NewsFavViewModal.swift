@@ -7,3 +7,25 @@
 //
 
 import Foundation
+
+protocol NewsFavViewModal {
+    
+    /// Title for news
+    var newsFavTitle: String { get }
+    
+    /// some information about news
+    var newsFavDescription: String { get }
+    
+}
+extension NewsObject: NewsFavViewModal {
+    
+    /// Setting value for title
+    var newsFavTitle: String {
+        return title
+    }
+    
+    /// Setting value for description
+    var newsFavDescription: String {
+        return desc
+    }
+}

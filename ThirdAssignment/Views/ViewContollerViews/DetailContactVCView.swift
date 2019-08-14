@@ -8,14 +8,35 @@
 
 import UIKit
 
-class DetailContactVCView: UIView {
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
+/// This view is for details contact view controller
+class DetailContactVCView: BaseView {
+    
+    /// Labels
+    @IBOutlet weak var nameLbl: UILabel!
+    @IBOutlet weak var phoneLbl: UILabel!
+    
+    /// Delegate
+    weak var detailDeleage: DetailContactAction?
+    
+    override func awakeFromNib() {
+        /// setting view is configurable or not
+        isViewConfigurable = true
     }
-    */
-
+    
+    /// Setting Value for labels
+    func changeVal(data:ContactViewModel){
+        nameLbl.text  = "Name : " + data.fullName
+        phoneLbl.text = "Phone : " + data.mobile
+    }
+    
+    /// Back button action
+    @IBAction func backBtn(_ sender: Any) {
+        detailDeleage?.didDismissViewController()
+    }
+    
+    /// Edit button action
+    @IBAction func editBtnAction(_ sender: Any) {
+        detailDeleage?.didEditButtonClicked()
+    }
+    
 }

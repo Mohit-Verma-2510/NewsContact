@@ -8,31 +8,45 @@
 
 import UIKit
 
+/// Showing detail for contact
 class DetailContactVC: BaseViewController {
-    
-    @IBOutlet weak var nameLbl: UILabel!
-    @IBOutlet weak var phoneLbl: UILabel!
     
     var delegate : StatusProtocol?
     
+    /// Geeting data from previous controller
     var data = ContactModel(data: [:])
+    
+    /// Custom view for this view controller
+    var custDetailView: DetailContactVCView?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        changeVal()
+        /// initial setup
+        custDetailView = self.view as? DetailContactVCView
+        custDetailView?.detailDeleage = self
+        
+        ///Setting data in views
+        custDetailView?.changeVal(data: data)
     }
-    
-    func changeVal(){
-        nameLbl.text  = "Name : " + data.name
-        phoneLbl.text = "Phone : " + data.phone
+}
+
+//MARK:- Status Protocol
+extension DetailContactVC : StatusProtocol{
+    func success(msg: String) {
+        self.delegate?.success(msg: "")
+        custDetailView?.changeVal(data: data)
     }
-    
-    
-    @IBAction func backBtn(_ sender: Any) {
+}
+
+// MARK: - DetailViewToViewController
+extension DetailContactVC: DetailContactAction {
+    /// Dismiss view controller acttion
+    func didDismissViewController() {
         dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func editBtnAction(_ sender: Any) {
+    /// Edit button Action
+    func didEditButtonClicked() {
         guard let destVC = storyboard?.instantiateViewController(withIdentifier: "EditContactVC") as? EditContactVC else {
             print("Error with EditContactVC")
             return
@@ -42,12 +56,4 @@ class DetailContactVC: BaseViewController {
         present(destVC, animated: true, completion: nil)
     }
     
-}
-
-//MARK:- Status Protocol
-extension DetailContactVC : StatusProtocol{
-    func success(msg: String) {
-        self.delegate?.success(msg: "")
-        changeVal()
-    }
 }

@@ -8,32 +8,34 @@
 
 import Foundation
 
-protocol NewsDataProtocol {
-    func sendData(data: [NewsDataModal])
+/// Protocol for sending news data
+protocol NewsDataProtocol: AnyObject {
+    func sendData(data: [NewsObject])
 }
 
-class NewsFeedInterface {
+/// All Api call for news
+class NewsFeedInterface: NetworkProtocol{
     
+    /// Singleton
     static let shared = NewsFeedInterface()
-    
-    var delegate: NewsDataProtocol?
-    
     private init(){}
     
-    func getAllNewsData()  {
-        NewsApi.shared.callNewsApi { (result, error) in
+    /// Delegate for data
+    weak var delegate: NewsDataProtocol?
+    
+    /// Getting all news data.
+    func getAllData(with urlString: String) {
+        let urlStr = "https://newsapi.org/v2/everything?q=bitcoin&apiKey=6a0aa94c1e194d1e908ccd08bec615b3"
+        NetworkDataManager.shared.callNewsApi(with: urlStr) { (result, error) in
             guard error == nil else { return }
-            
             guard let article = result?["articles"] as? [NSDictionary] else { return }
             
-            var dataTosend = [NewsDataModal]()
+            var dataTosend = [NewsObject]()
             for result in article {
-                dataTosend.append(NewsDataModal(data: result))
+                dataTosend.append(NewsObject(data: result))
             }
-            
             self.delegate?.sendData(data: dataTosend)
         }
-        
     }
     
 }

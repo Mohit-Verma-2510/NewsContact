@@ -8,8 +8,12 @@
 
 import Foundation
 
-protocol NewsFeedActions {
-    func didSelectTableView(data:NewsDataModal)
+/// All Action for news feed - home view controller for news
+protocol NewsFeedActions: AnyObject {
+    
+    /// when favourite buttoin is clicked in view
     func didFavouriteBtnClicked(_ senderIndex:Int)
-    func didSelectTableViewNew(data:NewsObject)
+    
+    /// when table view cell is clicked
+    func didSelectTableView(data:NewsViewModal)
 }

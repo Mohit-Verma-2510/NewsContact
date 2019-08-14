@@ -9,8 +9,8 @@
 import UIKit
 
 class NewsFeedTableViewCell: UITableViewCell {
-
-    @IBOutlet weak var newsBackgroundView: CustomViews!
+    
+    @IBOutlet weak var newsBackgroundView: BaseView!
     @IBOutlet weak var newsImgView: UIImageView!
     @IBOutlet weak var newsTitleLbl: UILabel!
     @IBOutlet weak var newsDetailLbl: UILabel!
@@ -23,23 +23,9 @@ class NewsFeedTableViewCell: UITableViewCell {
         // Initialization code
         newsBackgroundView.boxShadow()
     }
+    
     @IBAction func favBtnAction(_ sender: UIButton) {
         delegate?.favButtonAction(sender.tag)
     }
     
 }
-
-
-/*
-protocol NewsModals {
-    var newsTitle: String {get}
-}
-
-extension NewsDataModal: NewsModals {
-    var newsTitle: String  {
-        return title
-    }
-}
-
-
-*/

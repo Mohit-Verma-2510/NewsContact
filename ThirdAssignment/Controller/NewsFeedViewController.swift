@@ -7,129 +7,147 @@
 //
 
 import UIKit
+import RealmSwift
 
-protocol viewActions {
-    func didTapOnButton()
+/// This protocol is for realm news data
+protocol RealmProtocol {
+    func allData(data:Results<NewsObject>)
+    func refreshRequired()
+}
+extension RealmProtocol {
+    /// Making refreshRequired function as optional.
+    func refreshRequired(){}
 }
 
-
-class NewsFeedViewController: UIViewController {
+/// Home Page for news.
+class NewsFeedViewController: BaseViewController {
     
-    let cellID = "NewsFeedCell"
+    /// This is for custom view class for view controller
+    var custview: NewsFeedViewControllerView?
     
-    @IBOutlet weak var newsFeedTableView: UITableView!
+    /// Realm instant variable
+    let realInstance = RealmNews.shared
     
-    var data = [NewsDataModal]()
+    /// this is all the data of news
+    var allNewNews = [NewsObject]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        (self.view as? NewsFeedViewControllerView)?.temp = ""
-//        (self.view as? NewsFeedViewControllerView)?.delegate = self as! viewActions
-
-//        data = NewsFeedViewModal.shared.getData()
-        let newsVM = NewsFeedViewModal.shared
-        newsVM.delegate = self
-        newsVM.getAllNewsData()
         
-        ///Register TableView for XIB
-        let nib = UINib(nibName: "NewsFeedTableViewCell", bundle: nil)
-        newsFeedTableView.register(nib, forCellReuseIdentifier: cellID)
+        self.tabBarController?.delegate = self
+        /// Setting up initial UI
+        custview = self.view as? NewsFeedViewControllerView
+        custview?.tableViewInit()
+        custview?.setTableViewDelegate()
+        custview?.startActivityIndicator()
         
-        newsFeedTableView.separatorStyle = .none
+        /// Checking for internet
+        if Reachability.isConnectedToNetwork() {
+            //let newsInterface = NewsFeedInterface.shared
+            var newsInterface = NetworkFactory().create(with: .newsFeed)
+            newsInterface.delegate = self
+            newsInterface.getAllData(with: "")
+        }
+        else{
+            /// No Internet
+            print("Connect to internet")
+        }
         
         ///Setting navigation title
         self.navigationItem.title = NSLocalizedString("News Feed", comment: "Title For news feed.")
         self.navigationController?.hidesBarsOnSwipe = false
         
-        /*
-        ///Calling Objective function from swift by creating bridge
-        let obj = SampleViewController()
-        obj.printSomeData()
-        */
-        
     }
     
+    ///  Testing for Communication from objc to swift 
     @objc func sampleFuncForObjc(){
         print("This is called from Objective C........")
     }
     
-    func funcForTesting() -> Int{
-        return 10
+}
+
+// MARK: - NewsDataProtocol For Getting data from API Call
+extension NewsFeedViewController: NewsDataProtocol {
+    
+    /// Received Data from News API
+    func sendData(data: [NewsObject]) {
+        DispatchQueue.main.async {
+            self.custview?.stopActivityIndicator()
+            self.gettingDataForRealm(data: data)
+            self.custview?.delegate = self
+        }
+    }
+    
+    /// Sorting data
+    func gettingDataForRealm(data: [NewsObject]){
+        realInstance.realmDelegate = self
+        allNewNews = data
+        realInstance.getAllData()
     }
     
 }
 
-
-
-// MARK: - UITableViewDelegate, UITableViewDataSource For News Feed
-extension NewsFeedViewController: UITableViewDelegate, UITableViewDataSource {
+// MARK: - NewsFeedViewToControllerProtocol For Getting Table View Did Select Action
+extension NewsFeedViewController: NewsFeedActions {
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        guard let newsCell = tableView.dequeueReusableCell(withIdentifier: cellID, for: indexPath) as? NewsFeedTableViewCell else {
-            return UITableViewCell()
-        }
-        newsCell.selectionStyle  = .none
-        newsCell.delegate = self
-        
-        newsCell.newsTitleLbl.text = data[indexPath.row].title
-        newsCell.newsDetailLbl.text = data[indexPath.row].description
-        
-        newsCell.favButton.tag = indexPath.row
-        let isFav = data[indexPath.row].isFav
-        switch isFav {
-        case true:
-            newsCell.favButton.setImage(UIImage(named: "fav_filled"), for: .normal)
-            break
-        case false:
-            newsCell.favButton.setImage(UIImage(named: "fav_empty"), for: .normal)
-            break
-        }
-        
-        return newsCell
-        
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    /// Action for table view row selected
+    func didSelectTableView(data: NewsViewModal) {
         guard let destVC = self.storyboard?.instantiateViewController(withIdentifier: "NewsFeedDetailViewController") as? NewsFeedDetailViewController else { return }
-        
-        destVC.data = self.data[indexPath.row]
+        destVC.data = data
         self.navigationController?.pushViewController(destVC, animated: true)
     }
     
-}
-
-extension NewsFeedViewController: NewsFeedTVProtocol {
-    func favButtonAction(_ senderIndex: Int) {
+    /// Action for favourite button
+    func didFavouriteBtnClicked(_ senderIndex: Int) {
+        guard let favN = custview?.newsData[senderIndex] else{ return }
+        
+        /// creating object for realm
+        let tempObj = NewsObject()
+        tempObj.title = favN.newsTitle
+        tempObj.desc = favN.newsDescription
+        tempObj.url = favN.newsURL
+        tempObj.urlToImage = favN.newsUrlToImage
+        tempObj.isFav = !favN.newsIsFav
+        tempObj.content = favN.newsContent
+        realInstance.updateData(data: tempObj)
+        
+        /// Sending local notifcation
         let localNotis = LocalNotificationManager()
-        let temp = data[senderIndex]
-        switch temp.isFav {
-        case true:
-            localNotis.sendNotification(data: Notification(id: "\(senderIndex)", title: "Favourite News", description: "false", datetime: nil))
-            temp.isFav = false
-            break
-        case false:
-            localNotis.sendNotification(data: Notification(id: "\(senderIndex)", title: "Favourite News", description: "true", datetime: nil))
-            temp.isFav = true
-            break
-        }
-        data[senderIndex] = temp
-        newsFeedTableView.reloadData()
+        let tempDescription = "Marked favourite : \(tempObj.isFav)"
+        localNotis.sendNotification(data: Notifications(id: "\(senderIndex)", title: "\(tempObj.title)", description: tempDescription, datetime: nil))
+        custview?.newsData[senderIndex] = tempObj
+        custview?.newsFeedTableView.reloadData()
     }
 }
 
-
-extension NewsFeedViewController: NewsDataProtocol {
-    
-    func sendData(data: [NewsDataModal]) {
-        self.data = data
-        newsFeedTableView.delegate = self
-        newsFeedTableView.dataSource = self
-        newsFeedTableView.reloadData()
+//MARK:- Realprotocol
+extension NewsFeedViewController: RealmProtocol {
+    /// Getting all data from realm
+    func allData(data: Results<NewsObject>) {
+        if data.count < 1 {
+            /// If there is not data in realm then save it from API
+            realInstance.saveData(allNews: allNewNews)
+            realInstance.getAllData()
+        }
+        else {
+            /// If realm contain data then load data from realm to view
+            var newsArr = [NewsObject]()
+            for news in data {
+                newsArr.append(news)
+            }
+            custview?.newsData = newsArr
+            custview?.newsFeedTableView.reloadData()
+        }
+        
     }
-    
+}
+
+// MARK: - UITabBarDelegate
+extension NewsFeedViewController: UITabBarControllerDelegate, UITabBarDelegate {
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        print("++++++++++++++++")
+        print(item)
+        print("++++++++++++++++")
+        print(tabBar)
+    }
 }

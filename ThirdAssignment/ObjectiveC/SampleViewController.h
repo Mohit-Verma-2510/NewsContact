@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface SampleViewController : UIViewController
 
+-(void) printSomeData ;
+
 @end
 
 NS_ASSUME_NONNULL_END
